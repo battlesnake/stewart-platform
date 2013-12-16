@@ -1,12 +1,42 @@
 #include "shapes.h"
 #include "vector.h"
+#ifndef NO_GL
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#endif
 #include <math.h>
 
 const double PI = 3.141592653589793238462;
 
+void ellipse_normal_tangent(const VECTOR c, const VECTOR u, const VECTOR v, const float theta, VECTOR * const point, VECTOR * const normal, VECTOR * const tangent)
+{
+	/* Major and minor axes */
+	float a = u.length(), b = v.length();
+	/* Trig */
+	float sn = sin(theta), cs = cos(theta);
+	/* Unit basis */
+	VECTOR x = u.asUnit(), y = v.asUnit();
+	/* XYZ Coordinates of point */
+	VECTOR p = c + (cs * u) + (sn * v);
+	if (point)
+		point->assign(p);
+	VECTOR t = ((u.asUnit(b) * -sn) + (v.asUnit(a) * cs)).asUnit();
+	if (tangent)
+		tangent->assign(t);
+	VECTOR n = (t * (u * v)).asUnit();
+	if (normal)
+		normal->assign(n);
+}
+
+VECTOR ellipse_point(const VECTOR c, const VECTOR u, const VECTOR v, const float theta)
+{
+	float cs, sn;
+	sincosf(theta, &sn, &cs);
+	return cs * u + sn * v + c;
+}
+
+#ifndef NO_GL
 void strut(const VECTOR z1, const VECTOR z2, const VECTOR x1h, const VECTOR y1h, const VECTOR x2h, const VECTOR y2h)
 {
 	static const int quads[] = {
@@ -42,33 +72,6 @@ void strut(const VECTOR z1, const VECTOR z2, const VECTOR x1h, const VECTOR y1h,
 		}
 	}
 	glEnd();
-}
-
-void ellipse_normal_tangent(const VECTOR c, const VECTOR u, const VECTOR v, const float theta, VECTOR * const point, VECTOR * const normal, VECTOR * const tangent)
-{
-	/* Major and minor axes */
-	float a = u.length(), b = v.length();
-	/* Trig */
-	float sn = sin(theta), cs = cos(theta);
-	/* Unit basis */
-	VECTOR x = u.asUnit(), y = v.asUnit();
-	/* XYZ Coordinates of point */
-	VECTOR p = c + (cs * u) + (sn * v);
-	if (point)
-		point->assign(p);
-	VECTOR t = ((u.asUnit(b) * -sn) + (v.asUnit(a) * cs)).asUnit();
-	if (tangent)
-		tangent->assign(t);
-	VECTOR n = (t * (u * v)).asUnit();
-	if (normal)
-		normal->assign(n);
-}
-
-VECTOR ellipse_point(const VECTOR c, const VECTOR u, const VECTOR v, const float theta)
-{
-	float cs, sn;
-	sincosf(theta, &sn, &cs);
-	return cs * u + sn * v + c;
 }
 
 void ellipse(const VECTOR c, const VECTOR u, const VECTOR v,
@@ -116,3 +119,4 @@ void cylinder(const VECTOR a, const VECTOR b, const VECTOR u, const VECTOR v,
 	}
 	glEnd();
 }
+#endif

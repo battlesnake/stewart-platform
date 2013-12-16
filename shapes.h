@@ -6,10 +6,6 @@
  */
 
 #include "vector.h"
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
-#include <math.h>
 
 #ifndef SHAPES_H
 #define	SHAPES_H

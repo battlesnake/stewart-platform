@@ -52,13 +52,14 @@ bool CONFIGURATION::optimise(
 
 bool CONFIGURATION::optimise(const float * const freedom,
 	const float jumpscale,
-	const int iterations)
+	const int iterations,
+	const float delta)
 {
 	float x[6], grad[6];
 	bool done = false;
 	getParams(x);
 	for (int i = 0; i < iterations; i++) {
-		gradient(x, grad);
+		gradient(x, grad, delta);
 		for (int j = 0; j < 6; j++) {
 			x[j] -= grad[j] * jumpscale * freedom[j];
 		}

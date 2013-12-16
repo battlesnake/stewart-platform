@@ -1,6 +1,5 @@
 #include "vector.h"
 #include "matrix.h"
-#include <GL/gl.h>
 #include <math.h>
 
 void MATRIX::assign(const MATRIX& from)
@@ -16,10 +15,10 @@ void MATRIX::assign(const MATRIX * const from)
 }
 
 void MATRIX::assign(
-	const GLfloat m00, const GLfloat m01, const GLfloat m02, const GLfloat m03,
-	const GLfloat m04, const GLfloat m05, const GLfloat m06, const GLfloat m07,
-	const GLfloat m08, const GLfloat m09, const GLfloat m10, const GLfloat m11,
-	const GLfloat m12, const GLfloat m13, const GLfloat m14, const GLfloat m15)
+	const float m00, const float m01, const float m02, const float m03,
+	const float m04, const float m05, const float m06, const float m07,
+	const float m08, const float m09, const float m10, const float m11,
+	const float m12, const float m13, const float m14, const float m15)
 {
 	this->c[0] = m00;
 	this->c[1] = m01;
@@ -72,10 +71,10 @@ MATRIX::MATRIX(const MATRIX * const from)
 	this->assign(from);
 }
 
-MATRIX::MATRIX(const GLfloat m00, const GLfloat m01, const GLfloat m02, const GLfloat m03,
-	const GLfloat m04, const GLfloat m05, const GLfloat m06, const GLfloat m07,
-	const GLfloat m08, const GLfloat m09, const GLfloat m10, const GLfloat m11,
-	const GLfloat m12, const GLfloat m13, const GLfloat m14, const GLfloat m15)
+MATRIX::MATRIX(const float m00, const float m01, const float m02, const float m03,
+	const float m04, const float m05, const float m06, const float m07,
+	const float m08, const float m09, const float m10, const float m11,
+	const float m12, const float m13, const float m14, const float m15)
 {
 	this->assign(m00, m01, m02, m03, m04, m05, m06, m07, m08, m09, m10, m11, m12, m13, m14, m15);
 }
@@ -90,7 +89,7 @@ MATRIX::MATRIX(const VECTOR x, const VECTOR y, const VECTOR z)
 	this->assign(x, y, z);
 }
 
-GLfloat& MATRIX::operator () (int row, int col)
+float& MATRIX::operator () (int row, int col)
 {
 	return this->c[col * 4 + row];
 }
@@ -100,7 +99,7 @@ VECTOR& MATRIX::operator () (int col)
 	return(VECTOR&) this->c[col * 4];
 }
 
-GLfloat MATRIX::operator () (int row, int col) const
+float MATRIX::operator () (int row, int col) const
 {
 	return this->c[col * 4 + row];
 }
@@ -110,12 +109,12 @@ VECTOR MATRIX::operator () (int col) const
 	return *(VECTOR*) & this->c[col * 4];
 }
 
-GLfloat& MATRIX::operator [] (int idx)
+float& MATRIX::operator [] (int idx)
 {
 	return this->c[idx];
 }
 
-MATRIX::operator GLfloat const * () const
+MATRIX::operator float const * () const
 {
 	return this->c;
 }
@@ -139,7 +138,7 @@ MATRIX MATRIX::translation(const VECTOR x)
 		x[0], x[1], x[2], 1);
 }
 
-MATRIX MATRIX::translation(const GLfloat x, const GLfloat y, const GLfloat z)
+MATRIX MATRIX::translation(const float x, const float y, const float z)
 {
 	return MATRIX(
 		1, 0, 0, 0,
@@ -157,7 +156,7 @@ MATRIX MATRIX::scale(const VECTOR x)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::scale(const GLfloat x)
+MATRIX MATRIX::scale(const float x)
 {
 	return MATRIX(
 		x, 0, 0, 0,
@@ -166,7 +165,7 @@ MATRIX MATRIX::scale(const GLfloat x)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::scale(const GLfloat x, const GLfloat y, const GLfloat z)
+MATRIX MATRIX::scale(const float x, const float y, const float z)
 {
 	return MATRIX(
 		x, 0, 0, 0,
@@ -175,7 +174,7 @@ MATRIX MATRIX::scale(const GLfloat x, const GLfloat y, const GLfloat z)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::rotationX(const GLfloat angle)
+MATRIX MATRIX::rotationX(const float angle)
 {
 	float cs, sn;
 	sincosf(angle, &sn, &cs);
@@ -186,7 +185,7 @@ MATRIX MATRIX::rotationX(const GLfloat angle)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::rotationY(const GLfloat angle)
+MATRIX MATRIX::rotationY(const float angle)
 {
 	float cs, sn;
 	sincosf(angle, &sn, &cs);
@@ -197,7 +196,7 @@ MATRIX MATRIX::rotationY(const GLfloat angle)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::rotationZ(const GLfloat angle)
+MATRIX MATRIX::rotationZ(const float angle)
 {
 	float cs, sn;
 	sincosf(angle, &sn, &cs);
@@ -208,12 +207,12 @@ MATRIX MATRIX::rotationZ(const GLfloat angle)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::rotation(const VECTOR axis, const GLfloat angle)
+MATRIX MATRIX::rotation(const VECTOR axis, const float angle)
 {
 	float c, s;
 	sincosf(angle, &s, &c);
 	float C = 1 - c;
-	GLfloat x = axis[0], y = axis[1], z = axis[2];
+	float x = axis[0], y = axis[1], z = axis[2];
 	return MATRIX(
 		x * x * C + c, y * x * C + z*s, z * x * C - y*s, 0,
 		x * y * C - z*s, y * y * C + c, z * y * C + x*s, 0,
@@ -221,7 +220,7 @@ MATRIX MATRIX::rotation(const VECTOR axis, const GLfloat angle)
 		0, 0, 0, 1);
 }
 
-MATRIX MATRIX::rotation(const GLfloat yaw, const GLfloat pitch, const GLfloat roll)
+MATRIX MATRIX::rotation(const float yaw, const float pitch, const float roll)
 {
 	return MATRIX::rotationZ(roll) * MATRIX::rotationY(pitch) * MATRIX::rotationX(yaw);
 }
@@ -246,13 +245,13 @@ MATRIX& MATRIX::operator *=(const MATRIX operand)
 	return *this;
 }
 
-MATRIX& MATRIX::operator *=(const GLfloat factor)
+MATRIX& MATRIX::operator *=(const float factor)
 {
 	for (int i = 0; i < 16; i++)
 		(*this)[i] *= factor;
 }
 
-MATRIX& MATRIX::operator /=(const GLfloat factor)
+MATRIX& MATRIX::operator /=(const float factor)
 {
 	for (int i = 0; i < 16; i++)
 		(*this)[i] /= factor;
@@ -278,7 +277,7 @@ MATRIX MATRIX::operator *(const MATRIX operand) const
 	MATRIX result;
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++) {
-			GLfloat sum = 0;
+			float sum = 0;
 			for (int k = 0; k < 4; k++)
 				sum += (*this)(i, k) * operand(k, j);
 			result(i, j) = sum;
@@ -290,7 +289,7 @@ VECTOR MATRIX::operator *(const VECTOR operand) const
 {
 	VECTOR result;
 	for (int i = 0; i < 4; i++) {
-		GLfloat sum = 0;
+		float sum = 0;
 		for (int k = 0; k < 4; k++)
 			sum += (*this)(i, k) * operand[k];
 		result[i] = sum;
@@ -298,14 +297,14 @@ VECTOR MATRIX::operator *(const VECTOR operand) const
 	return result;
 }
 
-MATRIX MATRIX::operator *(const GLfloat factor) const
+MATRIX MATRIX::operator *(const float factor) const
 {
 	MATRIX result(this);
 	result *= factor;
 	return result;
 }
 
-MATRIX MATRIX::operator /(const GLfloat factor) const
+MATRIX MATRIX::operator /(const float factor) const
 {
 	MATRIX result(this);
 	result /= factor;
@@ -320,7 +319,7 @@ MATRIX MATRIX::hadamard(const MATRIX& operand) const
 	return result;
 }
 
-MATRIX operator *(const GLfloat factor, const MATRIX& operand)
+MATRIX operator *(const float factor, const MATRIX& operand)
 {
 	return operand * factor;
 }

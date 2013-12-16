@@ -27,54 +27,54 @@ public:
 	}
 
 	/* Offset of motor from centre */
-	VECTOR motor_offset;
+	VECTOR motor_offset = VECTOR::zero();
 
 	/* Angle of motor arm from base plane */
-	float motor_angle;
+	float motor_angle = 0;
 
 	/* Tangent to ellipse, at the motor_offset point */
-	VECTOR tangent;
+	VECTOR tangent = VECTOR::zero();
 
 	/* Normal to ellipse, at the motor_offset point */
-	VECTOR normal;
+	VECTOR normal = VECTOR::zero();
 
 	/* 
 	 * Offset of bases of strut from centres (accounting for rotary arm on
 	 * base)
 	 */
-	VECTOR base_offset, platform_offset;
+	VECTOR base_offset = VECTOR::zero();
+	VECTOR platform_offset = VECTOR::zero();
 
 	/* 
 	 * Half the minor dimensions of the strut at each end, for display
 	 * purposes
 	 */
-	VECTOR base_halfwidth, base_halfdepth, platform_halfwidth, platform_halfdepth;
+	VECTOR base_halfwidth = VECTOR::zero();
+	VECTOR base_halfdepth = VECTOR::zero();
+	VECTOR platform_halfwidth = VECTOR::zero();
+	VECTOR platform_halfdepth = VECTOR::zero();
 
 	/* Length of the strut */
-	float length;
+	float length = 250;
 
 	/*
 	 * Stores positions of each end of the strut, relative to centre of base
 	 * platform
 	 */
-	VECTOR p[2];
+	VECTOR p[2] = { VECTOR::zero(), VECTOR::zero() };
 
 	/* Nonzero if this strut could not be solved */
-	float error;
+	float error = 0;
 };
 
 /* Platform configuration objective */
 class CONFIGURATION {
-private:
-	void setParams(const float* const x);
-	void getParams(float* const x);
-	void gradient(const float* const x, float * const grad, const float delta = 0.01);
 public:
 
-	CONFIGURATION(int struts)
+	CONFIGURATION(int struts) :
+	struts(struts),
+	s(new STRUT[struts])
 	{
-		this->struts = struts;
-		s = new STRUT[struts];
 	}
 
 	~CONFIGURATION()
@@ -85,37 +85,37 @@ public:
 	/* pitch/yaw/roll/x/y/z must follow appear in that order in memory: */
 
 	/* Platform rotation relative to base plane */
-	float pitch = 0, yaw = 0, roll = 0;
+	float pitch = 0.3, yaw = 0.2, roll = 0;
 
 	/* Platform centre displacement from base centre */
-	VECTOR platform_displacement;
+	VECTOR platform_displacement = { 0, 200, 0 };
 
 	/* Number of struts */
-	int struts;
+	const int struts;
 
 	/* Length of strut */
-	float strut_length;
+	float strut_length = 250;
 
 	/* Arm length / wheel radius between strut and motor */
 	/* Wheels are displayed as ellipses to illustrate the angles better */
-	float strut_arm;
+	float strut_arm = 10;
 
 	/* Smaller dimensions of strut, for display purposes only*/
-	float strut_w;
-	float strut_d;
+	float strut_w = 3;
+	float strut_d = 2;
 
 	/* Wheel / arm thickness */
-	float wheel_thickness;
+	float wheel_thickness = 10;
 
 	/* Base geometry: plane size, thickness */
-	float base_rx;
-	float base_ry;
-	float base_thickness;
+	float base_rx = 150;
+	float base_ry = 150;
+	float base_thickness = 10;
 
 	/* Platform geometry: plane size, thickness */
-	float platform_rx;
-	float platform_ry;
-	float platform_thickness;
+	float platform_rx = 100;
+	float platform_ry = 100;
+	float platform_thickness = 10;
 
 	/* Ellipse, polygon with vertex attachment, polygon with edge attachment */
 	enum PLATFORM_SHAPE {
@@ -123,20 +123,26 @@ public:
 	};
 
 	/* Major and minor axes base */
-	VECTOR base[2];
+	VECTOR base[2] = {
+		VECTOR::unitX(),
+		VECTOR::unitY()
+	};
 
 	/* Is the base a polygon?  Or an ellipse? */
-	PLATFORM_SHAPE base_polygon;
+	PLATFORM_SHAPE base_polygon = POLYEDGE;
 
 	/* Major and minor axes platform */
-	VECTOR platform[2];
+	VECTOR platform[2] = {
+		VECTOR::unitX(),
+		VECTOR::unitY()
+	};
 
 	/* Is the platform a polygon?  Or an ellipse? */
-	PLATFORM_SHAPE platform_polygon;
+	PLATFORM_SHAPE platform_polygon = POLYEDGE;
 
 	/* Struts */
-	STRUT* s;
-	STRUT& operator [] (int index)
+	STRUT * const s;
+	STRUT & operator [] (int index)
 	{
 		return this->s[index];
 	}
@@ -155,7 +161,12 @@ public:
 	/* yaw/pitch/roll/x/y/z */
 	bool optimise(const float * const freedom,
 		const float jumpscale = 0.1,
-		const int iterations = 100);
+		const int iterations = 100,
+		const float delta = 0.1);
+private:
+	void setParams(const float* const x);
+	void getParams(float* const x);
+	void gradient(const float* const x, float * const grad, const float delta = 0.1);
 };
 
 CONFIGURATION demo_configuration();

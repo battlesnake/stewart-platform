@@ -9,62 +9,61 @@
 #define	VECTOR_H
 
 #include <math.h>
-#include <GL/gl.h>
 
 class VECTOR {
 private:
-	GLfloat c[4] = { 0, 0, 0, 0 };
+	float c[4] = { 0, 0, 0, 0 };
 public:
 
-	GLfloat& operator [] (const int index);
-	GLfloat& operator () (const int index);
+	float& operator [] (const int index);
+	float& operator () (const int index);
 
 	static VECTOR zero();
 	static VECTOR unitX();
 	static VECTOR unitY();
 	static VECTOR unitZ();
 
-	void assign(const GLfloat x, const GLfloat y, const GLfloat z);
+	void assign(const float x, const float y, const float z);
 	void assign(const VECTOR& from);
 	void assign(const VECTOR * const from);
 
 	VECTOR(const VECTOR& from);
 	VECTOR(const VECTOR * const from);
 	VECTOR();
-	VECTOR(const GLfloat x, const GLfloat y, const GLfloat z);
+	VECTOR(const float x, const float y, const float z);
 
 	VECTOR& operator +=(const VECTOR& operand);
 	VECTOR& operator -=(const VECTOR& operand);
-	VECTOR& operator *=(const GLfloat factor);
-	VECTOR& operator /=(const GLfloat factor);
+	VECTOR& operator *=(const float factor);
+	VECTOR& operator /=(const float factor);
 
-	GLfloat dot(const VECTOR& operand) const;
-	GLfloat dotSelf() const;
+	float dot(const VECTOR& operand) const;
+	float dotSelf() const;
 
-	GLfloat length() const;
+	float length() const;
 
-	GLfloat normalise();
-	GLfloat normalise(const GLfloat length);
+	float normalise();
+	float normalise(const float length);
 
 	VECTOR asUnit() const;
-	VECTOR asUnit(const GLfloat length) const;
+	VECTOR asUnit(const float length) const;
 
-	operator const GLfloat*() const;
+	operator const float*() const;
 	VECTOR operator +(const VECTOR& operand) const;
 	VECTOR operator -(const VECTOR& operand) const;
-	GLfloat operator |(const VECTOR& operand) const;
+	float operator |(const VECTOR& operand) const;
 	VECTOR operator *(const VECTOR& operand) const;
-	VECTOR operator *(GLfloat factor) const;
-	VECTOR operator /(GLfloat factor) const;
+	VECTOR operator *(float factor) const;
+	VECTOR operator /(float factor) const;
 	VECTOR operator +() const;
 	VECTOR operator -() const;
 	VECTOR operator =(const VECTOR& source);
 
-	GLfloat* quat(const GLfloat w);
+	float* quat(const float w);
 	VECTOR hadamard(const VECTOR& operand);
 };
 
-VECTOR operator *(const GLfloat factor, const VECTOR& operand);
+VECTOR operator *(const float factor, const VECTOR& operand);
 
 #endif	/* VECTOR_H */
 

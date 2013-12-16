@@ -1,13 +1,12 @@
 #include "vector.h"
 #include <math.h>
-#include <GL/gl.h>
 
-	GLfloat& VECTOR::operator [] (const int index)
+	float& VECTOR::operator [] (const int index)
 	{
 		return this->c[index];
 	}
 
-	GLfloat& VECTOR::operator () (const int index)
+	float& VECTOR::operator () (const int index)
 	{
 		return this->c[index];
 	}
@@ -32,7 +31,7 @@
 		return VECTOR(0, 0, 1);
 	}
 
-	void VECTOR::assign(const GLfloat x, const GLfloat y, const GLfloat z)
+	void VECTOR::assign(const float x, const float y, const float z)
 	{
 		(*this)[0] = x;
 		(*this)[1] = y;
@@ -68,7 +67,7 @@
 		this->assign(0, 0, 0);
 	}
 
-	VECTOR::VECTOR(const GLfloat x, const GLfloat y, const GLfloat z)
+	VECTOR::VECTOR(const float x, const float y, const float z)
 	{
 		this->assign(x, y, z);
 	}
@@ -87,44 +86,44 @@
 		return *this;
 	}
 
-	VECTOR& VECTOR::operator *=(const GLfloat factor)
+	VECTOR& VECTOR::operator *=(const float factor)
 	{
 		for (int i = 0; i < 3; i++)
 			(*this)[i] *= factor;
 		return *this;
 	}
 
-	VECTOR& VECTOR::operator /=(const GLfloat factor)
+	VECTOR& VECTOR::operator /=(const float factor)
 	{
 		for (int i = 0; i < 3; i++)
 			(*this)[i] /= factor;
 		return *this;
 	}
 
-	GLfloat VECTOR::dot(const VECTOR& operand) const
+	float VECTOR::dot(const VECTOR& operand) const
 	{
-		GLfloat result = 0;
+		float result = 0;
 		for (int i = 0; i < 3; i++)
 			result += (*this)[i] * operand[i];
 		return result;
 	}
 
-	GLfloat VECTOR::dotSelf() const
+	float VECTOR::dotSelf() const
 	{
-		GLfloat result = 0;
+		float result = 0;
 		for (int i = 0; i < 3; i++)
 			result += (*this)[i] * (*this)[i];
 		return result;
 	}
 
-	GLfloat VECTOR::length() const
+	float VECTOR::length() const
 	{
 		return sqrt(this->dotSelf());
 	}
 
-	GLfloat VECTOR::normalise()
+	float VECTOR::normalise()
 	{
-		GLfloat len = this->length();
+		float len = this->length();
 		if (len == 0)
 			return 0;
 		for (int i = 0; i < 3; i++)
@@ -132,9 +131,9 @@
 		return len;
 	}
 
-	GLfloat VECTOR::normalise(const GLfloat length)
+	float VECTOR::normalise(const float length)
 	{
-		GLfloat len = this->length();
+		float len = this->length();
 		if (len == 0 || length == 0)
 			return 0;
 		len = length / len;
@@ -150,14 +149,14 @@
 		return result;
 	}
 
-	VECTOR VECTOR::asUnit(const GLfloat length) const
+	VECTOR VECTOR::asUnit(const float length) const
 	{
 		VECTOR result(this);
 		result.normalise(length);
 		return result;
 	}
 
-	VECTOR::operator const GLfloat*() const
+	VECTOR::operator const float*() const
 	{
 		return this->c;
 	}
@@ -176,7 +175,7 @@
 		return result;
 	}
 
-	GLfloat VECTOR::operator |(const VECTOR& operand) const
+	float VECTOR::operator |(const VECTOR& operand) const
 	{
 		return this->dot(operand);
 	}
@@ -190,14 +189,14 @@
 		return result;
 	}
 
-	VECTOR VECTOR::operator *(GLfloat factor) const
+	VECTOR VECTOR::operator *(float factor) const
 	{
 		VECTOR result(this);
 		result *= factor;
 		return result;
 	}
 
-	VECTOR VECTOR::operator /(GLfloat factor) const
+	VECTOR VECTOR::operator /(float factor) const
 	{
 		VECTOR result(this);
 		result /= factor;
@@ -222,10 +221,10 @@
 		this->assign(source);
 	}
 
-	GLfloat* VECTOR::quat(const GLfloat w)
+	float* VECTOR::quat(const float w)
 	{
 		(*this)[3] = w;
-		return(GLfloat*) this;
+		return(float*) this;
 	}
 
 	VECTOR VECTOR::hadamard(const VECTOR& operand)
@@ -236,7 +235,7 @@
 		return result;
 	}
 
-VECTOR operator *(const GLfloat factor, const VECTOR& operand)
+VECTOR operator *(const float factor, const VECTOR& operand)
 {
 	return operand * factor;
 }
